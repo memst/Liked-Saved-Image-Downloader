@@ -45,6 +45,7 @@ function toggleDisplayed(elementId) {
     }
 }
 
+//Toggle between showing directory controls and image browser controls
 function toggleDirectoryControls() {
     toggleDisplayed("directoryControls");
     toggleDisplayed("imageBrowserControls");
