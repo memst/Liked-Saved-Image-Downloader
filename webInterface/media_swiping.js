@@ -18,18 +18,20 @@ function result(user_choice) {
 var mediaContianer = document.getElementById("mediaContainer");
 
 // Simple click
-mediaContianer.addEventListener('click', function(){result(0);}, false);        
+//mediaContianer.addEventListener('click', function(){result(0);}, false);        
 
 // Click and drag (non-touch-screen)
-mediaContianer.addEventListener('dragstart', handleDragStart, false);
-mediaContianer.addEventListener('dragend', handleDragEnd, false);
+mediaContianer.addEventListener('mousedown', handleDragStart, false);
+mediaContianer.addEventListener('mouseup', handleDragEnd, false);
 
 // On mobile swipe action
 mediaContianer.addEventListener('touchstart', handleTouchStart, false);        
-mediaContianer.addEventListener('touchmove', handleTouchEnd, false);
+mediaContianer.addEventListener('touchend', handleTouchEnd, false);
+
+
 
 var xDown = null;                                                        
-function handleDragStart(evt) {                                         
+function handleDragStart(evt) {                                      
   xDown = evt.clientX;                                      
 };                                                
 function handleTouchStart(evt) {                                         
@@ -44,7 +46,8 @@ function handleDragEnd(evt) {
 function handleEnd(xUp) {
   if ( !xDown ) { return; }
   var xDiff = xDown - xUp;
-  if ( xDiff > 2 ) result(1);   
-  if ( xDiff < -2 ) result(-1);   
+  if ( xDiff > 20 ) result(1);   
+  else if ( xDiff < -20 ) result(-1);  
+  else result(0); 
   xDown = null;
 };
