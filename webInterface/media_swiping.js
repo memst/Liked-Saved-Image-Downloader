@@ -29,7 +29,6 @@ mediaContianer.addEventListener('touchstart', handleTouchStart, false);
 mediaContianer.addEventListener('touchend', handleTouchEnd, false);
 
 
-
 var xDown = null;                                                        
 function handleDragStart(evt) {
 	xDown = evt.clientX;
@@ -41,7 +40,7 @@ function handleTouchStart(evt) {
 	xDown = evt.touches[0].clientX;
 };
 function handleTouchEnd(evt) {
-	handleEnd(evt.touches[0].clientX);
+	handleEnd(evt.changedTouches[0].clientX);
 };
 
 function handleEnd(xUp) {
