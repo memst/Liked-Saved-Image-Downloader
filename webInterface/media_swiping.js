@@ -6,7 +6,12 @@
 
 // user_choice is an arbitrary string label or int. 
 function result(user_choice) {
-  console.log(user_choice);
+  console.log("Drag result: ", user_choice);
+  if (user_choice == 1) {
+    sendMessage('nextImage')
+  } else if (user_choice == -1) {
+    sendMessage('previousImage')
+  }
 }
 
 //get mediaContianer
