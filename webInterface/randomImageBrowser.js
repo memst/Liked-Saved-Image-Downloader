@@ -66,7 +66,7 @@ function directoryOrFileOnClick(path, serverPath, type) {
         }
 
         if (type == "video") {
-            window.open("https://" + window.location.host + "/" + serverPath);
+            window.open("http://" + window.location.host + "/" + serverPath);
         }
 
         if (type == "image") {
@@ -74,7 +74,7 @@ function directoryOrFileOnClick(path, serverPath, type) {
         }
 
         if (type == "file") {
-            window.open("https://" + window.location.host + "/" + serverPath);
+            window.open("http://" + window.location.host + "/" + serverPath);
         }
     }
 }
@@ -103,7 +103,7 @@ function handleSetImage(messageDict) {
 	if (infiniteScroll) {
 		var infiniteScrollContainer = document.getElementById("infiniteScrollContainer");
 		var imageElement = document.createElement("img");
-		imageElement.src = 'https://' + window.location.host + '/' + messageDict.serverImagePath;
+		imageElement.src = 'http://' + window.location.host + '/' + messageDict.serverImagePath;
 		imageElement.className = "infiniteScrollImage";
 		infiniteScrollContainer.appendChild(imageElement);
 		// var infiniteScrollContainer = document.getElementById("infiniteScrollContainer");
@@ -127,11 +127,16 @@ function handleSetVideo(messageDict) {
 
 	if (infiniteScroll) {
 		var infiniteScrollContainer = document.getElementById("infiniteScrollContainer");
-		var videoElement = document.createElement("a");
-		videoElement.href = 'https://' + window.location.host + '/' + messageDict.serverImagePath;
-		videoElement.className = "infiniteScrollVideoLink";
-		var linkText = document.createTextNode("View Video " + messageDict.serverImagePath);
-		videoElement.appendChild(linkText);
+		var videoElement = document.createElement("video");
+        videoElement.className = "infiniteScrollVideo";
+        videoElement.autoplay = true;
+        videoElement.loop = true;
+        videoElement.controls = true;
+
+        var sourceElement = document.createElement("source");
+		sourceElement.src = 'http://' + window.location.host + '/' + messageDict.serverImagePath;
+		
+		videoElement.appendChild(sourceElement);
 		infiniteScrollContainer.appendChild(videoElement);
 	} else {
 		// Clear the image
@@ -142,9 +147,8 @@ function handleSetVideo(messageDict) {
 		  + messageDict.serverImagePath
 		  + '" type="video/mp4">Your browser does not support the video tag</video>';*/
 		var videoContainer = document.getElementById("videoContainer");
-		videoContainer.innerHTML = '<a class="bigCenterLink" target="_blank" href="https://' +
-			window.location.host + '/' + messageDict.serverImagePath +
-			'">View Video ' + messageDict.serverImagePath + '</a>';
+        videoContainer.innerHTML = '<video class="finiteVideo" autoplay controls><source src="http://' +
+            window.location.host + '/' + messageDict.serverImagePath + '"></video>'
 	}
 }
 
