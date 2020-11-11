@@ -39,9 +39,16 @@ input {
     transform: translate(-50%, -50%);
 }
 
+#mediaContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.finiteImage,
 .finiteVideo {
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    object-fit: contain;
 }
 
 .infiniteScrollVideo {
