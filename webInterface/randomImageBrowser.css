@@ -51,14 +51,11 @@ input {
     object-fit: contain;
 }
 
-.infiniteScrollVideo {
-    width: 100%;
-    max-height: 90vh;
-}
-
+.infiniteScrollVideo,
 .infiniteScrollImage {
     width: 100%;
     max-height: 90vh;
+    object-fit: contain;
 }
 
 button {
