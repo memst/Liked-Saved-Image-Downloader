@@ -19,15 +19,7 @@ import settings
 import LikedSavedDatabase
 from downloaders import redditUserImageScraper
 from utils import utilities
-
-# Require a username and password in order to use the web interface. See ReadMe.org for details.
-#enable_authentication = False
-enable_authentication = True
-
-useSSL = True
-
-if enable_authentication:
-    import PasswordManager
+import PasswordManager
 
 # List of valid user ids (used to compare user cookie)
 authenticated_users = []
@@ -101,7 +93,7 @@ def getRandomImage(filteredImagesCache=None, randomImageFilter=''):
 # https://www.tornadoweb.org/en/stable/guide/security.html
 
 def login_get_current_user(handler):
-    if enable_authentication:
+    if settings.settings['enable_authentication']:
         cookie = handler.get_secure_cookie("user")
         if cookie in authenticated_users:
             return cookie
@@ -117,7 +109,7 @@ class AuthHandler(tornado.web.RequestHandler):
     
 class LoginHandler(AuthHandler):
     def get(self):
-        if not enable_authentication:
+        if not settings.settings['enable_authentication']:
             self.redirect("/")
         else:
             if PasswordManager.havePasswordsBeenSet():
@@ -134,7 +126,7 @@ class LoginHandler(AuthHandler):
         global authenticated_users
         # Test password
         print("Attempting to authorize user {}...".format(self.get_argument("name")))
-        if enable_authentication and PasswordManager.verify(self.get_argument("password")):
+        if settings.settings['enable_authentication'] and PasswordManager.verify(self.get_argument("password")):
             # Generate new authenticated user session
             randomGenerator = random.SystemRandom()
             cookieSecret = str(randomGenerator.getrandbits(128))
@@ -158,7 +150,7 @@ class LogoutHandler(AuthHandler):
     def get(self):
         global authenticated_users
         
-        if enable_authentication:
+        if settings.settings['enable_authentication']:
             print("User {} logging out".format(self.current_user))
             if self.current_user in authenticated_users:
                 authenticated_users.remove(self.current_user)
@@ -171,7 +163,7 @@ class SetPasswordHandler(AuthHandler):
         pass
 
     def post(self):
-        if not enable_authentication:
+        if not settings.settings['enable_authentication']:
             self.redirect("/")
         else:
             print("Attempting to set password")
@@ -818,7 +810,7 @@ if __name__ == '__main__':
 
     # This isn't pretty, but it'll get the job done
     webSocketSettings = open('webInterface/webSocketSettings.js', 'w')
-    webSocketSettings.write('useSSL = {};'.format('true' if useSSL else 'false'))
+    webSocketSettings.write('useSSL = {};'.format('true' if settings.settings['useSSL'] else 'false'))
     webSocketSettings.close()
 
     port = settings.settings['Port'] if settings.settings['Port'] else 8888
@@ -830,7 +822,7 @@ if __name__ == '__main__':
     # (from https://jupyter-notebook.readthedocs.io/en/latest/public_server.html)
     # I then had to tell Firefox to trust this certificate even though it is self-signing (because
     # I want a free certificate for this non-serious project)
-    if useSSL:
+    if settings.settings['useSSL']:
         if os.path.exists("certificates/liked_saved_server.crt.pem"):
             app.listen(port, ssl_options={"certfile":"certificates/liked_saved_server.crt.pem",
                                           "keyfile":"certificates/liked_saved_server.crt.key"})
@@ -847,7 +839,7 @@ if __name__ == '__main__':
         app.listen(port)
 
     if settings.settings['Launch_Browser_On_Startup']:
-        browseUrl  ="{}://localhost:{}".format('https' if useSSL else 'http', port)
+        browseUrl  ="{}://localhost:{}".format('https' if settings.settings['useSSL'] else 'http', port)
         print("Attempting to launch user's default browser to {}".format(browseUrl))
         webbrowser.open(browseUrl)
 
