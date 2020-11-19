@@ -152,6 +152,24 @@ class LikedSavedDatabase:
                            (filePath, collectionId))
         self.save()
 
+    # Collection by name or ID, whichever's more convenient
+    def removeFileFromCollection(self, filePath, collection):
+        cursor = self.dbConnection.cursor()
+        collectionId = collection
+        if type(collection) == str:
+            cursor.execute("select * from Collections where name=?", (collection,))
+            collectionId = cursor.fetchone()
+            if not collectionId:
+                print("Could not find collection name {}".format(collection))
+
+        if not collectionId:
+            print("Collection not found")
+        else:
+            print("remove {} from collection ID {}".format(filePath, collectionId))
+            cursor.execute("DELETE OR IGNORE FROM FilesToCollections WHERE filePath=? AND collectionKey=?",
+                       (filePath, collectionId))
+        self.save()
+
     def associateFileToSubmissionById(self, filePath, submissionId):
         cursor = self.dbConnection.cursor()
         cursor.execute("insert or ignore into FilesToSubmissions values (?,?)",

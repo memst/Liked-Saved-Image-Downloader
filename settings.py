@@ -109,7 +109,12 @@ settings = {
     'Database_Has_Imported_Comments' : False,
 
     'Port' : 8888,
-    'Launch_Browser_On_Startup' : True
+    'Launch_Browser_On_Startup' : True,
+    'useSSL' : True,
+
+    #Require a username and password in order to use the web interface. See ReadMe.org for details.
+    'enable_authentication' : True
+    
 }
 
 redditClientSecretInstructions = '''You need OAuth tokens to run the script. To get them follow these steps:</p>
