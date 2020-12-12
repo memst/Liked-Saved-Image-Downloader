@@ -107,6 +107,8 @@ body {
 }
 
 #navBar button {
-	width: 20%;
+	margin: 0;
+	width: auto;
 	height: 100%;
+	font-size: 80%;
 }
