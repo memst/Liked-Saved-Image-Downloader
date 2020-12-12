@@ -773,19 +773,7 @@ def make_app():
                                    cookie_secret=cookieSecret,
                                    login_url="/login")
 
-if __name__ == '__main__':
-    print('Loading settings...')
-    settings.getSettings()
-
-    print('Content output directory: ' + settings.settings['Output_dir'])
-    if not settings.settings['Output_dir']:
-        print('WARNING: No output directory specified! This will probably break things')
-
-    if not savedImagesCache:
-        generateSavedImagesCache(settings.settings['Output_dir'])
-
-    LikedSavedDatabase.initializeFromSettings(settings.settings)
-
+def importOldDatabase(LikedSavedDatabase):
     # Backwards compatibility: Read the old .json files into the database. This can be slow for old
     # repositories, so only do it once
     if not settings.settings['Database_Has_Imported_All_Submissions']:
@@ -807,6 +795,21 @@ if __name__ == '__main__':
     # if not settings.settings['Database_Has_Imported_Comments']:
         # LikedSavedDatabase.importFromAllJsonInDir(settings.settings['Output_dir'])
         # settings.settings['Database_Has_Imported_Comments'] = True
+
+if __name__ == '__main__':
+    print('Loading settings...')
+    settings.getSettings()
+
+    print('Content output directory: ' + settings.settings['Output_dir'])
+    if not settings.settings['Output_dir']:
+        print('WARNING: No output directory specified! This will probably break things')
+
+    if not savedImagesCache:
+        generateSavedImagesCache(settings.settings['Output_dir'])
+
+    LikedSavedDatabase.initializeFromSettings(settings.settings)
+    importOldDatabase(LikedSavedDatabase)
+    
 
     # This isn't pretty, but it'll get the job done
     webSocketSettings = open('webInterface/webSocketSettings.js', 'w')
