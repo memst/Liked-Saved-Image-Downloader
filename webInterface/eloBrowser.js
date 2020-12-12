@@ -2,15 +2,6 @@ var ws = new WebSocket((useSSL ? "wss://" : "ws://") + window.location.host + "/
 
 var username = "likedSavedBrowserClient";
 
-var currentOpacity = 0.3;
-
-var infiniteScroll = false;
-
-//Define the portion of the screen that has to be swiped through for it to count as a swipe
-var SWIPE_TOLERANCE = 0.4;
-//Variable that stores start of swipe location
-var xDown = null; 
-
 function sendMessage(message) {
 	if (!ws) {
 		console.log("No websocket");
@@ -27,50 +18,71 @@ function sendMessage(message) {
 }
 
 function handleSetImage(messageDict) {
-	//document.getElementById("message").innerHTML = messageDict.serverImagePath + " (" + messageDict.responseToCommand + ")";
-
-	if (infiniteScroll) {
-		var infiniteScrollContainer = document.getElementById("infiniteScrollContainer");
-		var imageElement = document.createElement("img");
-		imageElement.src = '/' + messageDict.serverImagePath;
-		imageElement.className = "infiniteScrollImage";
-		infiniteScrollContainer.appendChild(imageElement);
-		// var infiniteScrollContainer = document.getElementById("infiniteScrollContainer");
-		// var imageElement = document.createElement("div");
-		// imageElement.style.backgroundImage = "url('/" + messageDict.serverImagePath + "')";
-		// imageElement.style.backgroundSize = "contain";
-		// imageElement.style.backgroundRepeat = "no-repeat";
-		// imageElement.className = "infiniteScrollImage";
-		// infiniteScrollContainer.appendChild(imageElement);
-	} else {
-		// Clear previous media
-		var mediaContainer = document.getElementById("mediaContainer");
-        //Insert image
-		mediaContainer.innerHTML = '<img class="finiteImage" src="/' + messageDict.serverImagePath + '" alt="' + messageDict.serverImagePath + '">';
-	}
+	// Clear previous media
+	var mediaContainer = document.getElementById("mediaContainer");
+    //Insert image
+	mediaContainer.innerHTML = '<img class="finiteImage" src="/' + messageDict.serverImagePath + '" alt="' + messageDict.serverImagePath + '">';
 }
 
 function handleSetVideo(messageDict) {
-	//document.getElementById("message").innerHTML = messageDict.serverImagePath + " (" + messageDict.responseToCommand + ")";
+    // Clear previous media
+	var mediaContainer = document.getElementById("mediaContainer");
+    //Insert video
+    //You could enable controls for the video, but they would be inacessible behind the buttons
+    mediaContainer.innerHTML = '<video id="video" class="finiteVideo" autoplay controls loop><source src="/' + messageDict.serverImagePath + '"></video>';
+    addVideoControls();
 
-	if (infiniteScroll) {
-		var infiniteScrollContainer = document.getElementById("infiniteScrollContainer");
-		var videoElement = document.createElement("video");
-        videoElement.className = "infiniteScrollVideo";
-        videoElement.controls = true;
+}
 
-        var sourceElement = document.createElement("source");
-        sourceElement.src = '/' + messageDict.serverImagePath;
-        
-        videoElement.appendChild(sourceElement);
-        infiniteScrollContainer.appendChild(videoElement);
-	} else {
-        // Clear previous media
-		var mediaContainer = document.getElementById("mediaContainer");
-        //Insert video
-        //You could enable controls for the video, but they would be inacessible behind the buttons
-        mediaContainer.innerHTML = '<video class="finiteVideo" autoplay controls loop><source src="/' + messageDict.serverImagePath + '"></video>'
-	}
+function addVideoControls() {
+	'use strict';
+
+	// Does the browser actually support the video element?
+	var supportsVideo = !!document.createElement('video').canPlayType;
+
+	if (supportsVideo) {
+		// Obtain handles to main elements
+		var videoContainer = document.getElementById('videoContainer');
+		var video = document.getElementById('video');
+		var videoControls = document.getElementById('video-controls');
+
+		// Hide the default controls
+		video.controls = false;
+		
+		// Display the user defined video controls
+		videoControls.setAttribute('data-state', 'visible');
+
+		// Obtain handles to buttons and other elements
+		var progress = document.getElementById('progress');
+		var progressBar = document.getElementById('progress-bar');
+
+		// If the browser doesn't support the progress element, set its state for some different styling
+		var supportsProgress = (document.createElement('progress').max !== undefined);
+		if (!supportsProgress) progress.setAttribute('data-state', 'fake');
+
+		// Only add the events if addEventListener is supported (IE8 and less don't support it, but that will use Flash anyway)
+		if (document.addEventListener) {
+			// Wait for the video's meta data to be loaded, then set the progress bar's max value to the duration of the video
+			video.addEventListener('loadedmetadata', function() {
+				progress.setAttribute('max', video.duration);
+			});
+
+			// As the video is playing, update the progress bar
+			video.addEventListener('timeupdate', function() {
+				// For mobile browsers, ensure that the progress element's max attribute is set
+				if (!progress.getAttribute('max')) progress.setAttribute('max', video.duration);
+				progress.value = video.currentTime;
+				progressBar.style.width = Math.floor((video.currentTime / video.duration) * 100) + '%';
+			});
+
+			// React to the user clicking within the progress bar
+			progress.addEventListener('click', function(e) {
+				//var pos = (e.pageX  - this.offsetLeft) / this.offsetWidth; // Also need to take the parent into account here as .controls now has position:relative
+				var pos = (e.pageX  - (this.offsetLeft + this.offsetParent.offsetLeft)) / this.offsetWidth;
+				video.currentTime = pos * video.duration;
+			});
+		}
+	 }
 }
 
 ws.onmessage = function(evt) {
@@ -82,10 +94,8 @@ ws.onmessage = function(evt) {
     }
 
     if (messageDict.action == "setVideo") {
-        handleSetVideo(document.getElementById("mediaContainer").children[0]);
+        handleSetVideo(messageDict);
     }
-
-    listenSwipes(mediaContainer)
 
     if (messageDict.action == "sendDirectory") {
         var directoryListOut = document.getElementById("directoryListContainer");
@@ -129,57 +139,3 @@ ws.onclose = function(event) {
     //serverStatus.innerHTML = "Connection to server lost. Reload the page to attempt to reconnect.";
 }
 
-
-
-// user_choice is an arbitrary string label or int. 
-function result(user_choice) {
-    console.log("Drag result: ", user_choice);
-    if (user_choice == 1) {
-        sendMessage('nextImage')
-    } else if (user_choice == -1) {
-        sendMessage('previousImage')
-    }
-}
-
-
-function listenSwipes(element) {
-    console.log("listening")
-    // Simple click
-    //element.addEventListener('click', function(){result(0);}, false);
-
-    // Click and drag (non-touch-screen)
-    element.addEventListener('mousedown', handleDragStart, false);
-    element.addEventListener('mouseup', handleDragEnd, false);
-
-    // On mobile swipe action
-    element.addEventListener('touchstart', handleTouchStart, false);
-    element.addEventListener('touchend', handleTouchEnd, false);
-}
-
-                                                       
-function handleDragStart(evt) {
-    xDown = evt.clientX;
-};
-function handleDragEnd(evt) {
-    handleEnd(evt.clientX);
-}; 
-function handleTouchStart(evt) {
-    xDown = evt.touches[0].clientX;
-};
-function handleTouchEnd(evt) {
-    handleEnd(evt.changedTouches[0].clientX);
-};
-
-function handleEnd(xUp) {
-    //return if no drag start detected
-    if ( !xDown ) { 
-        return; 
-    }
-
-    var xDiff = xDown - xUp;
-    console.log("Drag width: ", xDiff)
-    if ( xDiff > SWIPE_TOLERANCE * window.innerWidth) result(1);
-    else if ( xDiff < -1 * SWIPE_TOLERANCE * window.innerWidth) result(-1);  
-    //else result(0);
-    xDown = null;
-};
