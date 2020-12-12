@@ -6,7 +6,7 @@ html {
 body {
 		margin: 0;
 		width: 100%;
-		height: 99vh;
+		height: 100vh;
 		background-color: #000000;
 		background-size: contain;
 		background-repeat: no-repeat;
@@ -14,7 +14,16 @@ body {
 
 #controlledMedia {
 	width: 100%;
-	height: 100%;
+	height: 90%;
+}
+
+#mediaContainer {
+		user-select: none;
+}
+
+#mediaContainer img {
+	user-select: none;
+	pointer-events: none;
 }
 
 .imageContainer {
@@ -26,15 +35,6 @@ body {
 	height:90%;
 }
 
-#mediaContainer::after {
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		content: '';
-}
-
 .finiteImage {
 		width: 100%;
 		height: 100%;
@@ -44,8 +44,8 @@ body {
 /* Video controls */
 
 .finiteVideo {
-		width: 100vw;
-		height: 90vh;
+		width: 100%;
+		height: 100%;
 		object-fit: contain;
 }
 
@@ -98,3 +98,14 @@ body {
 	background-color:#0095dd;
 }
 
+/* Nav bar */
+
+#navBar {
+	width: 100%;
+	height: 10%;
+}
+
+#navBar button {
+	width: 20%;
+	height: 100%;
+}
