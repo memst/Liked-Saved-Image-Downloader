@@ -11,15 +11,6 @@ body {
     background-repeat: no-repeat;
 }
 
-#mediaContainer::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    content: '';
-}
-
 .finiteImage,
 .finiteVideo {
     width: 100vw;

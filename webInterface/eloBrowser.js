@@ -6,6 +6,11 @@ var currentOpacity = 0.3;
 
 var infiniteScroll = false;
 
+//Define the portion of the screen that has to be swiped through for it to count as a swipe
+var SWIPE_TOLERANCE = 0.4;
+//Variable that stores start of swipe location
+var xDown = null; 
+
 function sendMessage(message) {
 	if (!ws) {
 		console.log("No websocket");
@@ -77,8 +82,10 @@ ws.onmessage = function(evt) {
     }
 
     if (messageDict.action == "setVideo") {
-        handleSetVideo(messageDict);
+        handleSetVideo(document.getElementById("mediaContainer").children[0]);
     }
+
+    listenSwipes(mediaContainer)
 
     if (messageDict.action == "sendDirectory") {
         var directoryListOut = document.getElementById("directoryListContainer");
@@ -121,3 +128,58 @@ ws.onclose = function(event) {
     // Hide it if the socket is open, so it doesn't get in the way
     //serverStatus.innerHTML = "Connection to server lost. Reload the page to attempt to reconnect.";
 }
+
+
+
+// user_choice is an arbitrary string label or int. 
+function result(user_choice) {
+    console.log("Drag result: ", user_choice);
+    if (user_choice == 1) {
+        sendMessage('nextImage')
+    } else if (user_choice == -1) {
+        sendMessage('previousImage')
+    }
+}
+
+
+function listenSwipes(element) {
+    console.log("listening")
+    // Simple click
+    //element.addEventListener('click', function(){result(0);}, false);
+
+    // Click and drag (non-touch-screen)
+    element.addEventListener('mousedown', handleDragStart, false);
+    element.addEventListener('mouseup', handleDragEnd, false);
+
+    // On mobile swipe action
+    element.addEventListener('touchstart', handleTouchStart, false);
+    element.addEventListener('touchend', handleTouchEnd, false);
+}
+
+                                                       
+function handleDragStart(evt) {
+    xDown = evt.clientX;
+};
+function handleDragEnd(evt) {
+    handleEnd(evt.clientX);
+}; 
+function handleTouchStart(evt) {
+    xDown = evt.touches[0].clientX;
+};
+function handleTouchEnd(evt) {
+    handleEnd(evt.changedTouches[0].clientX);
+};
+
+function handleEnd(xUp) {
+    //return if no drag start detected
+    if ( !xDown ) { 
+        return; 
+    }
+
+    var xDiff = xDown - xUp;
+    console.log("Drag width: ", xDiff)
+    if ( xDiff > SWIPE_TOLERANCE * window.innerWidth) result(1);
+    else if ( xDiff < -1 * SWIPE_TOLERANCE * window.innerWidth) result(-1);  
+    //else result(0);
+    xDown = null;
+};
