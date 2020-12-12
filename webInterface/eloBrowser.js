@@ -8,13 +8,13 @@ function sendMessage(message) {
 		return;
 	}
 	
-    var payload = {
-        "command": message,
-        "user": username
-    }
+	var payload = {
+		"command": message,
+		"user": username
+	}
 
-    // Make the request to the WebSocket.
-    ws.send(JSON.stringify(payload));
+	// Make the request to the WebSocket.
+	ws.send(JSON.stringify(payload));
 }
 
 function handleSetImage(messageDict) {
@@ -22,18 +22,18 @@ function handleSetImage(messageDict) {
 	// Clear previous media
 	var mediaContainer = document.getElementById("mediaContainer");
 	mediaContainer.className = "imageContainer";
-    //Insert image
+	//Insert image
 	mediaContainer.innerHTML = '<img class="finiteImage" src="/' + messageDict.serverImagePath + '" alt="' + messageDict.serverImagePath + '">';
 }
 
 function handleSetVideo(messageDict) {
-    // Clear previous media
+	// Clear previous media
 	var mediaContainer = document.getElementById("mediaContainer");
 	mediaContainer.className = "videoContainer";
-    //Insert video
-    //You could enable controls for the video, but they would be inacessible behind the buttons
-    mediaContainer.innerHTML = '<video id="video" class="finiteVideo" autoplay controls loop><source src="/' + messageDict.serverImagePath + '"></video>';
-    addVideoControls();
+	//Insert video
+	//You could enable controls for the video, but they would be inacessible behind the buttons
+	mediaContainer.innerHTML = '<video id="video" class="finiteVideo" autoplay controls loop><source src="/' + messageDict.serverImagePath + '"></video>';
+	addVideoControls();
 
 }
 
@@ -89,56 +89,56 @@ function addVideoControls() {
 }
 
 ws.onmessage = function(evt) {
-    var messageDict = JSON.parse(evt.data);
+	var messageDict = JSON.parse(evt.data);
 
 
-    if (messageDict.action == "setImage") {
-        handleSetImage(messageDict);
-    }
+	if (messageDict.action == "setImage") {
+		handleSetImage(messageDict);
+	}
 
-    if (messageDict.action == "setVideo") {
-        handleSetVideo(messageDict);
-    }
+	if (messageDict.action == "setVideo") {
+		handleSetVideo(messageDict);
+	}
 
-    if (messageDict.action == "sendDirectory") {
-        var directoryListOut = document.getElementById("directoryListContainer");
+	if (messageDict.action == "sendDirectory") {
+		var directoryListOut = document.getElementById("directoryListContainer");
 
-        // Clear previous list
-        while (directoryListOut.firstChild) {
-            directoryListOut.removeChild(directoryListOut.firstChild);
-        }
+		// Clear previous list
+		while (directoryListOut.firstChild) {
+			directoryListOut.removeChild(directoryListOut.firstChild);
+		}
 
-        for (var i = 0; i < messageDict.directoryList.length; i++) {
-            // Not sure where the leading space is coming from here
-            var path = messageDict.directoryList[i].path;
+		for (var i = 0; i < messageDict.directoryList.length; i++) {
+			// Not sure where the leading space is coming from here
+			var path = messageDict.directoryList[i].path;
 
-            var newButton = document.createElement("button");
-            newButton.classList.add("directoryOrFileButton");
-            newButton.classList.add("affectOpacity");
-            newButton.classList.add("directoryButton_" + messageDict.directoryList[i].type);
-            newButton.onclick = directoryOrFileOnClick(path, messageDict.directoryList[i].serverPath,
-                messageDict.directoryList[i].type);
-            newButton.innerHTML = path;
-            newButton.style.opacity = currentOpacity;
+			var newButton = document.createElement("button");
+			newButton.classList.add("directoryOrFileButton");
+			newButton.classList.add("affectOpacity");
+			newButton.classList.add("directoryButton_" + messageDict.directoryList[i].type);
+			newButton.onclick = directoryOrFileOnClick(path, messageDict.directoryList[i].serverPath,
+				messageDict.directoryList[i].type);
+			newButton.innerHTML = path;
+			newButton.style.opacity = currentOpacity;
 
-            directoryListOut.appendChild(newButton);
-        }
-    }
+			directoryListOut.appendChild(newButton);
+		}
+	}
 };
 
 // As soon as the websocket opens, request the initial image
 ws.onopen = function(event) {
-    //var serverStatus = document.getElementById("serverStatus");
-    // Hide it if the socket is open, so it doesn't get in the way
-    //.innerHTML = "";
-    sendMessage("nextImage");
-    sendMessage("listCurrentDirectory")
+	//var serverStatus = document.getElementById("serverStatus");
+	// Hide it if the socket is open, so it doesn't get in the way
+	//.innerHTML = "";
+	sendMessage("nextImage");
+	sendMessage("listCurrentDirectory")
 }
 
 // As soon as the websocket opens, request the initial image
 ws.onclose = function(event) {
-    //var serverStatus = document.getElementById("serverStatus");
-    // Hide it if the socket is open, so it doesn't get in the way
-    //serverStatus.innerHTML = "Connection to server lost. Reload the page to attempt to reconnect.";
+	//var serverStatus = document.getElementById("serverStatus");
+	// Hide it if the socket is open, so it doesn't get in the way
+	//serverStatus.innerHTML = "Connection to server lost. Reload the page to attempt to reconnect.";
 }
 

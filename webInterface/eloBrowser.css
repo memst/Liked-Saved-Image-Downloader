@@ -1,100 +1,100 @@
 html {
-    margin: 0;
-    height: 100%;
+		margin: 0;
+		height: 100%;
 }
 
 body {
-    margin: 0;
-    width: 100%;
-    height: 99vh;
-    background-color: #000000;
-    background-size: contain;
-    background-repeat: no-repeat;
+		margin: 0;
+		width: 100%;
+		height: 99vh;
+		background-color: #000000;
+		background-size: contain;
+		background-repeat: no-repeat;
 }
 
 #controlledMedia {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 .imageContainer {
-  width:100%;
-  height:100%;
+	width:100%;
+	height:100%;
 }
 .videoContainer {
-  width:100%;
-  height:90%;
+	width:100%;
+	height:90%;
 }
 
 #mediaContainer::after {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		content: '';
 }
 
 .finiteImage {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
 }
 
 /* Video controls */
 
 .finiteVideo {
-    width: 100vw;
-    height: 90vh;
-    object-fit: contain;
+		width: 100vw;
+		height: 90vh;
+		object-fit: contain;
 }
 
 .video-controls {
-   width:99%;
-   height:8%; /* of figure's height */
-   position:relative;
-   margin-left: auto;
-   margin-right: auto;
+	width:99%;
+	height:8%; /* of figure's height */
+	position:relative;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .video-controls[data-state=hidden] {
-   display:none;
+	display:none;
 }
 .video-controls[data-state=visible] {
-   display:block;
+	display:block;
 }
 
 .video-controls .progress {
-   cursor:pointer;
+	cursor:pointer;
 }
 
 .video-controls progress {
-   display:block;
-   width:100%;
-   margin-top:0.125rem;
-   border:none;
-   color:#0095dd;
-   -moz-border-radius:2px;
-   -webkit-border-radius:2px;
-   border-radius:2px;
+	display:block;
+	width:100%;
+	margin-top:0.125rem;
+	border:none;
+	color:#0095dd;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
 }
 
 .video-controls progress[data-state="fake"] {
-   background:#e6e6e6;
-   height:65%;
+	 background:#e6e6e6;
+	 height:65%;
 }
 .video-controls progress span {
-   width:0%;
-   height:100%;
-   display:inline-block;
-   background-color:#2a84cd;  
+	width:0%;
+	height:100%;
+	display:inline-block;
+	background-color:#2a84cd;  
 }
 
 .video-controls progress::-moz-progress-bar {
-   background-color:#0095dd;
+	background-color:#0095dd;
 }
 
 .video-controls progress::-webkit-progress-value {
-   background-color:#0095dd;
+	background-color:#0095dd;
 }
 
