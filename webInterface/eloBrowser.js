@@ -18,8 +18,10 @@ function sendMessage(message) {
 }
 
 function handleSetImage(messageDict) {
+	document.getElementById('video-controls').setAttribute('data-state', 'hidden');
 	// Clear previous media
 	var mediaContainer = document.getElementById("mediaContainer");
+	mediaContainer.className = "imageContainer";
     //Insert image
 	mediaContainer.innerHTML = '<img class="finiteImage" src="/' + messageDict.serverImagePath + '" alt="' + messageDict.serverImagePath + '">';
 }
@@ -27,6 +29,7 @@ function handleSetImage(messageDict) {
 function handleSetVideo(messageDict) {
     // Clear previous media
 	var mediaContainer = document.getElementById("mediaContainer");
+	mediaContainer.className = "videoContainer";
     //Insert video
     //You could enable controls for the video, but they would be inacessible behind the buttons
     mediaContainer.innerHTML = '<video id="video" class="finiteVideo" autoplay controls loop><source src="/' + messageDict.serverImagePath + '"></video>';
