@@ -4,7 +4,7 @@ Initial code copied from https://github.com/mtyka/swipelabel
 */
 
 //Define the portion of the screen that has to be swiped through for it to count as a swipe
-var TOLERANCE = 0.4
+var TOLERANCE = 0.1
 
 // user_choice is an arbitrary string label or int. 
 function result(user_choice) {
