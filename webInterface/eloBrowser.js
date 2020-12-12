@@ -18,7 +18,7 @@ function sendMessage(message) {
 }
 
 function handleSetImage(messageDict) {
-	document.getElementById('video-controls').setAttribute('data-state', 'hidden');
+	clearMedia();
 	// Clear previous media
 	var mediaContainer = document.getElementById("mediaContainer");
 	mediaContainer.className = "imageContainer";
@@ -27,6 +27,7 @@ function handleSetImage(messageDict) {
 }
 
 function handleSetVideo(messageDict) {
+	clearMedia();
 	// Clear previous media
 	var mediaContainer = document.getElementById("mediaContainer");
 	mediaContainer.className = "videoContainer";
@@ -37,6 +38,15 @@ function handleSetVideo(messageDict) {
 
 }
 
+function clearMedia() {
+	var mediaContainer = document.getElementById("mediaContainer");
+	mediaContainer.className = "";
+
+	var videoControls = document.getElementById('video-controls');
+	videoControls.setAttribute('data-state', 'hidden');
+	videoControls.innerHTML = "";
+}
+
 function addVideoControls() {
 	'use strict';
 
@@ -44,10 +54,12 @@ function addVideoControls() {
 	var supportsVideo = !!document.createElement('video').canPlayType;
 
 	if (supportsVideo) {
+		var videoControls = document.getElementById('video-controls');
+		videoControls.innerHTML = '<div class="progress"><progress id="progress" value="0" min="0"><span id="progress-bar"></span></progress></div>';
+
 		// Obtain handles to main elements
 		var videoContainer = document.getElementById('videoContainer');
 		var video = document.getElementById('video');
-		var videoControls = document.getElementById('video-controls');
 
 		// Hide the default controls
 		video.controls = false;
