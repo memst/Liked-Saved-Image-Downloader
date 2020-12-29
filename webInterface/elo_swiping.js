@@ -4,16 +4,23 @@ Initial code copied from https://github.com/mtyka/swipelabel
 */
 
 //Define the portion of the screen that has to be swiped through for it to count as a swipe
-var TOLERANCE = 0.1
+var TOLERANCE = 0.1;
+var swipeCategory = "Image";
+
 
 // user_choice is an arbitrary string label or int. 
 function result(user_choice) {
 	console.log("Drag result: ", user_choice);
+
 	if (user_choice == 1) {
-		sendMessage('nextImage')
+		sendMessage('next' + swipeCategory);
 	} else if (user_choice == -1) {
-		sendMessage('previousImage')
+		sendMessage('previous' + swipeCategory);
 	}
+}
+
+function setSwipeCategory(category) {
+	swipeCategory = category;
 }
 
 

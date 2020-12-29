@@ -2,17 +2,18 @@
 <html>
 
 <head>
-		<title>Browsing Content</title>
+	<title>Browsing Content</title>
 
-		<meta charset="utf-8">
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<!-- For mobile: set scale to native -->
-		<!-- Because I wrote this UI to be scaling for mobile manually, some work needs to be done before making this switch -->
-		<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
-		
-		<link rel="stylesheet" type="text/css" href="eloBrowser.css">
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!-- For mobile: set scale to native -->
+	<!-- Because I wrote this UI to be scaling for mobile manually, some work needs to be done before making this switch -->
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+
+	<link rel="stylesheet" type="text/css" href="eloBrowser.css">
 	<script type="text/javascript" src="webSocketSettings.js"></script>
 	<script type="text/javascript" src="eloBrowser.js"></script>
+
 </head>
 
 <body>
@@ -33,9 +34,15 @@
 	<div id="navBar">
 		<button class="previousImageInFolder" onclick="sendMessage('previousImageInFolder')">Previous In Folder</button>
 		<button class="nextImageInFolder" onclick="sendMessage('nextImageInFolder')">Next In Folder</button>
-		<button class="imageAddToFavorites affectOpacity" onclick="sendMessage('imageAddToFavorites')">Favorite</button>
+		<button class="imageAddToFavorites" onclick="sendMessage('imageAddToFavorites')">Favorite</button>
 		<button class="imageAddToHidden" onclick="sendMessage('imageAddToHidden')">Hide</button>
 
+		<div id="categorySelector" class="btn-group-vertical">
+		  <button type="button" onclick="setSwipeCategory('Image')" class=" active">Random</button>
+		  <button type="button" onclick="setSwipeCategory('ImageInFolder')" class="">Directory</button>
+		  <button type="button" onclick="setSwipeCategory('Favorite')" class="">Favourites</button>
+		</div>
+		<script type="text/javascript" src="buttonGroup.js"></script>
 
 	</div>
 </body>
